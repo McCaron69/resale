@@ -1,0 +1,11 @@
+version: "3.9"
+services:
+  mysql:
+    container_name: shop-mysql
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: 123321
+    ports:
+      - 3307:3306
+    volumes:
+      - ./mysql:/var/lib/mysql

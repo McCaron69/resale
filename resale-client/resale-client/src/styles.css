@@ -1,0 +1,66 @@
+body {
+  background: url("assets/back.jpg");
+  background-size: cover;
+}
+.popover-body{
+  background: aliceblue;
+  opacity: 100%;
+}
+
+
+@media (max-width: 576px) {
+  .modal {
+    --bs-modal-width: 95vw;
+  }
+  .modal-content{
+    width: 95vw;
+  }
+  .table-responsive {
+    width: 90vw;
+    overflow-x: scroll;
+    overflow-y: auto;
+  }
+}
+
+
+@media (min-width: 992px) {
+  .adv-image {
+    height: 420px;
+    width: 560px;
+    max-height: 420px;
+    max-width: 560px;
+    min-height: 420px;
+    min-width: 560px;
+  }
+}
+
+@media (min-width: 0px) {
+  .adv-image {
+    height: 120px;
+    width: 160px;
+    max-height: 120px;
+    max-width: 160px;
+    min-height: 120px;
+    min-width: 160px;
+  }
+}
+@media (min-width: 576px) {
+  .adv-image {
+    height: 216px;
+    width: 288px;
+    max-height: 216px;
+    max-width: 288px;
+    min-height: 216px;
+    min-width: 288px;
+  }
+}
+
+@media (min-width: 768px) {
+  .adv-image {
+    height: 286px;
+    max-height: 286px;
+    min-height: 286px;
+    max-width: 384px;
+    width: auto;
+  }
+}

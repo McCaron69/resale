@@ -1,0 +1,239 @@
+<div class="container-fluid">
+  <div style="min-height: 600px" class="table-responsive">
+    <table class="table table-hover">
+      <thead>
+      <tr>
+        <th>Название</th>
+        <th>Родительская категория</th>
+        <th>Характеристики</th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let category of categories">
+        <td (click)="openCategoryModal(categoryModal, category)">
+          {{category.name}}
+        </td>
+        <td (click)="openCategoryModal(categoryModal, category)">
+          <div *ngIf="category.parent">{{category.parent.name}}</div>
+        </td>
+        <td>
+          <a type="button" (click)="openFeatureModal(featureModal,category)">
+            характеристики...
+          </a>
+        </td>
+        <td>
+          <button class="btn btn-danger" (click)="deleteCategory(category)">
+            удалить
+          </button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="d-flex">
+    <div class="col-9">
+      <ul class="pagination position-relative m-0">
+        <li class="page-item" *ngIf="page!=0"><a class="page-link" (click)="getCategories(0)">1</a></li>
+        <li *ngIf="page>3" class="bg-light">. . .</li>
+        <li class="page-item" *ngIf="page>2"><a class="page-link" (click)="getCategories(page-2)">{{page - 1}}</a></li>
+        <li class="page-item" *ngIf="page>1"><a class="page-link" (click)="getCategories(page-1)">{{page}}</a></li>
+        <li disabled="true" class="page-item"><a class="page-link">{{page + 1}}</a></li>
+        <li class="page-item" *ngIf="page<totalCategoryPages-2"><a class="page-link"
+                                                                   (click)="getCategories(page+1)">{{page + 2}}</a></li>
+        <li class="page-item" *ngIf="page<totalCategoryPages-3"><a class="page-link"
+                                                                   (click)="getCategories(page+2)">{{page + 3}}</a></li>
+        <li *ngIf="page<totalCategoryPages-4" class="bg-light">. . .</li>
+        <li class="page-item" *ngIf="page!=totalCategoryPages-1"><a class="page-link"
+                                                                    (click)="getCategories(totalCategoryPages-1)">{{totalCategoryPages}}</a>
+        </li>
+      </ul>
+    </div>
+    <div class="d-flex justify-content-end col-3">
+      <button class="btn btn-success" [routerLink]="['/category/create']">создать</button>
+    </div>
+  </div>
+
+
+</div>
+
+<!--Modal for features-->
+<ng-template #featureModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Характеристики категории {{current.name}}</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <table *ngIf="current.features.length" class="table table-hover">
+      <thead>
+      <tr>
+        <th>название</th>
+        <th>описание</th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let feature of current.features">
+        <td>{{feature.name}}</td>
+        <td>{{feature.description}}</td>
+        <td>
+          <button class="btn btn-danger" (click)="deleteFeature(feature)">удалить</button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <div class="container-fluid">
+      <div class="d-flex me-4">
+        <div class="form-outline">
+          <input [(ngModel)]="words" (change)="searchFeatures(0)" type="search" id="form1" class="form-control"
+                 placeholder="Поиск"/>
+        </div>
+        <button type="button" class="btn btn-primary" (click)="searchFeatures(0)">
+          <fa-icon [icon]="faSearch"></fa-icon>
+        </button>
+      </div>
+      <div>
+        <table *ngIf="searchFeatureResult.length" class="table table-hover">
+          <thead>
+          <tr>
+            <th>название</th>
+            <th>описание</th>
+            <th></th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let feature of searchFeatureResult">
+            <td>{{feature.name}}</td>
+            <td>{{feature.description}}</td>
+            <td>
+              <button class="btn btn-success" (click)="addFeature(feature)">добавить</button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+        <ul class="pagination position-relative m-0">
+          <li class="page-item" *ngIf="featurePage>0"><a class="page-link"
+                                                         (click)="searchFeatures(0)">1</a></li>
+          <li class="page-item" *ngIf="featurePage>3">. . .</li>
+          <li class="page-item" *ngIf="featurePage>2"><a class="page-link"
+                                                         (click)="searchFeatures(featurePage-2)">{{featurePage - 1}}</a>
+          </li>
+          <li class="page-item" *ngIf="featurePage>1"><a class="page-link"
+                                                         (click)="searchFeatures(featurePage-1)">{{featurePage}}</a>
+          </li>
+          <li disabled="true" *ngIf="featurePage" class="page-item"><a class="page-link">{{featurePage + 1}}</a></li>
+          <li class="page-item" *ngIf="featurePage<totalFeaturesPages-2"><a class="page-link"
+                                                                            (click)="searchFeatures(featurePage+1)">{{featurePage + 2}}</a>
+          </li>
+          <li class="page-item" *ngIf="featurePage<totalFeaturesPages-3"><a class="page-link"
+                                                                            (click)="searchFeatures(featurePage+2)">{{featurePage + 3}}</a>
+          </li>
+          <li class="page-item" *ngIf="featurePage<totalFeaturesPages-4">. . .</li>
+          <li class="page-item" *ngIf="featurePage<totalFeaturesPages-1"><a class="page-link"
+                                                                            (click)="searchFeatures(featurePage+1)">{{totalFeaturesPages}}</a>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close('close')">закрыть</button>
+  </div>
+</ng-template>
+
+
+<ng-template #categoryModal let-modal>
+  <div class="modal-header">
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <div class="bg-light bg-opacity-50">
+      <label>Навзание</label>
+      <input type="text" class="form-control bg-light bg-opacity-50" [formControl]="currentName">
+      <div class="col-12" *ngIf="currentName.invalid &&
+          (currentName.dirty ||
+          currentName.touched)">
+        <div class="bg-danger bg-opacity-25 form-control"
+             *ngIf="currentName.errors?.minlength">
+          Минимальное количество символов 2
+        </div>
+        <div class="bg-danger bg-opacity-25 form-control"
+             *ngIf="currentName.errors?.maxlength">
+          Максимальное количество символов 50
+        </div>
+        <div class="bg-danger bg-opacity-25 form-control"
+             *ngIf="currentName.errors?.required">
+          Название обязательное для заполнения
+        </div>
+      </div>
+    </div>
+    <div class="bg-light bg-opacity-50">
+      <label>Родительская категория</label>
+      <div class="form-control bg-light bg-opacity-50">
+        <div *ngIf="current.parent">{{current.parent.name}}</div>
+        <div *ngIf="!current.parent">отсутствует</div>
+      </div>
+    </div>
+    <div >
+      <div class="d-flex">
+        <div class="form-outline">
+          <input [(ngModel)]="words" (change)="searchCategories(0)" type="search" id="form2" class="form-control"
+                 placeholder="Поиск"/>
+        </div>
+        <button type="button" class="btn btn-primary" (click)="searchCategories(0)">
+          <fa-icon [icon]="faSearch"></fa-icon>
+        </button>
+      </div>
+      <div>
+        <table *ngIf="searchCategoryResult.length" class="table table-hover">
+          <thead>
+          <tr>
+            <th>Название</th>
+            <th>Родительская категория</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let category of searchCategoryResult">
+            <td>{{category.name}}</td>
+            <td>
+              <div *ngIf="category.parent">{{category.parent.name}}</div>
+            </td>
+            <td>
+              <button class="btn btn-success" (click)="changeParent(category)">заменить</button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+        <ul class="pagination position-relative m-0">
+          <li class="page-item" *ngIf="categoryModalPage>0"><a class="page-link" (click)="searchCategories(0)">1</a>
+          </li>
+          <li class="page-item" *ngIf="categoryModalPage>3">. . .</li>
+          <li class="page-item" *ngIf="categoryModalPage>2"><a class="page-link"
+                                                               (click)="searchCategories(categoryModalPage-2)">{{categoryModalPage - 1}}</a>
+          </li>
+          <li class="page-item" *ngIf="categoryModalPage>1"><a class="page-link"
+                                                               (click)="searchCategories(categoryModalPage-1)">{{categoryModalPage}}</a>
+          </li>
+          <li disabled="true" *ngIf="categoryModalPage" class="page-item"><a
+            class="page-link">{{categoryModalPage + 1}}</a></li>
+          <li class="page-item" *ngIf="categoryModalPage<totalModalCategoryPages-2"><a class="page-link"
+                                                                                       (click)="searchCategories(categoryModalPage+1)">{{categoryModalPage + 2}}</a>
+          </li>
+          <li class="page-item" *ngIf="categoryModalPage<totalModalCategoryPages-3"><a class="page-link"
+                                                                                       (click)="searchCategories(categoryModalPage+2)">{{categoryModalPage + 3}}</a>
+          </li>
+          <li class="page-item" *ngIf="categoryModalPage<totalModalCategoryPages-4">. . .</li>
+          <li class="page-item" *ngIf="categoryModalPage<totalModalCategoryPages-1"><a class="page-link"
+                                                                                       (click)="searchCategories(totalModalCategoryPages-1)">{{totalModalCategoryPages}}</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="saveChanges(modal)">сохранить</button>
+  </div>
+</ng-template>

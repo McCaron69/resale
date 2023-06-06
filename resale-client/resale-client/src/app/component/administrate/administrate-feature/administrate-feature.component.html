@@ -1,0 +1,103 @@
+<div class="container-fluid">
+  <div style="min-height: 600px" class="table-responsive">
+    <table class="table table-hover">
+      <thead>
+      <tr>
+        <th>название</th>
+        <th class="col-4 col-lg-6">описание</th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let feature of features" (click)="openFeatureModal(content,feature)">
+        <td>{{feature.name}}</td>
+        <td  style="
+            max-width: 150px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;">
+          {{feature.description}}
+        </td>
+        <td>
+          <button class="btn btn-danger" (click)="deleteFeature(feature)">
+            удалить
+          </button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="d-flex">
+    <div class="col-10">
+      <ul class="pagination position-relative m-0">
+        <li class="page-item" *ngIf="page>0"><a class="page-link" (click)="getFeatures(page-1)">Previous</a></li>
+        <li class="page-item" *ngIf="page>1"><a class="page-link" (click)="getFeatures(page-2)">{{page - 1}}</a></li>
+        <li class="page-item" *ngIf="page>0"><a class="page-link" (click)="getFeatures(page-1)">{{page}}</a></li>
+        <li disabled="true" class="page-item"><a class="page-link">{{page + 1}}</a></li>
+        <li class="page-item" *ngIf="page<totalPages-1"><a class="page-link" (click)="getFeatures(page+1)">{{page + 2}}</a>
+        </li>
+        <li class="page-item" *ngIf="page<totalPages-2"><a class="page-link" (click)="getFeatures(page+2)">{{page + 3}}</a>
+        </li>
+        <li class="page-item" *ngIf="page<totalPages-1"><a class="page-link" (click)="getFeatures(page+1)">Next</a></li>
+      </ul>
+    </div>
+    <div class="d-flex justify-content-end col-2">
+      <button [routerLink]="'/feature/create'" class="btn btn-sm btn-success">Добавить</button>
+    </div>
+  </div>
+
+</div>
+
+
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="current">
+      <div>
+        <label>Название</label>
+        <input class="form-control col-12 bg-light bg-opacity-50" type="text" formControlName="name">
+        <div class="col-12" *ngIf="current.get('name')?.invalid &&
+          (current.get('name')?.dirty ||
+          current.get('name')?.touched)">
+          <div class="bg-danger bg-opacity-25 form-control"
+               *ngIf="current.get('name')?.errors?.required">
+            Название обязательное для заполнения</div>
+          <div class="bg-danger bg-opacity-25 form-control"
+               *ngIf="current.get('name')?.errors?.pattern">
+            Используются недопустимые символы</div>
+          <div class="bg-danger bg-opacity-25 form-control"
+               *ngIf="current.get('name')?.errors?.minlength">
+            Минимальное количество символов 2
+            </div>
+          <div class="bg-danger bg-opacity-25 form-control"
+               *ngIf="current.get('name')?.errors?.maxlength">
+            Максимальное количество символов 50</div>
+        </div>
+      </div>
+      <div>
+        <label>Описание</label>
+        <textarea class="form-control col-12 bg-light bg-opacity-50" formControlName="description"></textarea>
+        <div class="col-12" *ngIf="current.get('description')?.invalid &&
+          (current.get('description')?.dirty ||
+          current.get('description')?.touched)">
+          <div class="bg-danger bg-opacity-25 form-control"
+               *ngIf="current.get('description')?.errors?.required">
+            Описание обязательное для заполнения</div>
+          <div class="bg-danger bg-opacity-25 form-control"
+               *ngIf="current.get('description')?.errors?.pattern">
+            Используются недопустимые символы</div>
+          <div class="bg-danger bg-opacity-25 form-control"
+               *ngIf="current.get('description')?.errors?.maxlength">
+            Максимальное количество символов 1000</div>
+        </div>
+      </div>
+      <input type="hidden" formControlName="featureId">
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="saveChanges(modal)">созранить</button>
+  </div>
+</ng-template>

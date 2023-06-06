@@ -1,0 +1,109 @@
+<div class="container-fluid col-12 p-0 d-flex flex-column">
+  <ul class="navbar-nav navbar-expand-lg nav-pills d-block flex-column adaptive-nav bg-opacity-50 bg-dark col-lg-2 col-sm-12">
+    <li *ngIf="parent" class="nav-item btn btn-sm btn-outline-dark col-12" (click)="back()">
+      <fa-icon [icon]="faBack"></fa-icon>
+    </li>
+    <li class="nav-item btn btn-sm btn-outline-dark col-lg-12 col-4 p-lg-0 p-sm-2 v-100" *ngFor="let category of categories">
+      <button class="w-100 h-auto nav-link" (click)="up(category)">{{category.name}}</button>
+    </li>
+  </ul>
+  <div class="col-lg-10 col-sm-12">
+    <div class="p-2 bg-opacity-10 bg-dark mb-5" *ngFor="let advertisement of advertisements">
+      <div class="d-flex">
+        <div class="h2 ms-2 col-6">
+          <h2>{{advertisement.name}}</h2>
+        </div>
+        <div class="col-6 d-flex justify-content-end p-2">
+          <span>Дата подачи: {{advertisement.placedAt | date: 'medium'}}</span>
+        </div>
+      </div>
+      <div class="d-flex">
+        <div class="col-6">
+          <div *ngIf="advertisement.images.length">
+            <ngb-carousel class="border-2 border-primary bg-dark bg-opacity-10" style="border-radius: 10%">
+              <ng-template ngbSlide *ngFor="let image of advertisement.images">
+                <div class="col-12 d-flex flex-column justify-content-center flex-wrap">
+                  <div class="d-flex justify-content-center flex-wrap align-content-center">
+                    <img [src]="baseUrl+'images/'+image.id" alt="Random first slide" class="adv-image">
+                  </div>
+                </div>
+              </ng-template>
+            </ngb-carousel>
+          </div>
+          <div class="px-1 py-3">
+            <p class="h6">Описание товара:</p>
+            <p>{{advertisement.description}}</p>
+          </div>
+        </div>
+        <div class="px-2">
+          <table *ngIf="advertisement.features.length" class="table-hover table">
+            <thead>
+            <tr>
+              <th colspan="2">Характеристики товара</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let feature of advertisement.features">
+              <td
+                placement="right"
+                ngbPopover="{{feature.description}}"
+                popoverTitle="{{feature.name}}"
+                container="body"
+                triggers="mouseenter:mouseleave"
+                #myPopover="ngbPopover"
+                (mouseenter)="myPopover.open()"
+                (mouseleave)="myPopover.close()"
+              >{{feature.name}}
+              </td>
+              <td>{{feature.value}}</td>
+            </tr>
+            </tbody>
+          </table>
+          <table class="table-hover table">
+            <thead>
+            <tr>
+              <th colspan="2">Контакты продавца</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td>Имя продавца</td>
+              <td>{{advertisement.user.firstName}}</td>
+            </tr>
+            <tr>
+              <td>Э-почта</td>
+              <td>{{advertisement.user.email}}</td>
+            </tr>
+            <tr>
+              <td>Номер телефона:</td>
+              <td>{{advertisement.user.phone}}</td>
+            </tr>
+            <tr>
+              <td>Адрес:</td>
+              <td>{{ addressService.getFormattedAddress(advertisement.address) }}</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="d-flex p-2 h4">
+        <div class="d-flex col-12 justify-content-end">
+          <span>Стоимость: {{advertisement.price | currency: 'EUR'}}</span>
+        </div>
+      </div>
+    </div>
+    <ul class="pagination m-2" *ngIf="advertisements.length">
+      <li class="page-item" *ngIf="page>0"><a class="page-link" (click)="getAdv(page-1, parent!)">Previous</a></li>
+      <li class="page-item" *ngIf="page>1"><a class="page-link" (click)="getAdv(page-2, parent!)">{{page - 1}}</a></li>
+      <li class="page-item" *ngIf="page>0"><a class="page-link" (click)="getAdv(page-1, parent!)">{{page}}</a></li>
+      <li disabled="true" class="page-item"><a class="page-link">{{page + 1}}</a></li>
+      <li class="page-item" *ngIf="page<totalPages-1"><a class="page-link"
+                                                         (click)="getAdv(page+1, parent!)">{{page + 2}}</a></li>
+      <li class="page-item" *ngIf="page<totalPages-2"><a class="page-link"
+                                                         (click)="getAdv(page+2, parent!)">{{page + 3}}</a></li>
+      <li class="page-item" *ngIf="page<totalPages-1"><a class="page-link" (click)="getAdv(page+1, parent!)">Next</a>
+      </li>
+    </ul>
+  </div>
+</div>
+

@@ -1,0 +1,23 @@
+<div class="container-fluid d-flex flex-column p-0">
+  <ul class="navbar-nav nav-pills flex-column mb-auto col-lg-2 col-sm-12 bg-opacity-50 bg-dark">
+    <h5 class="text-center m-2 border-bottom border-2 border-dark">Панель администратора</h5>
+    <li class="nav-item btn btn-outline-dark bg-opacity-75 border-0 col-lg-12 col-sm-3">
+      <a class="w-100 h-auto nav-link h4 text-uppercase" [routerLink]="'/administrate/advertisement'">Объявления</a>
+    </li>
+    <li class="nav-item btn btn-outline-dark border-0 col-lg-12 col-sm-3">
+      <a class="nav-link w-100 h-auto h4 text-uppercase" [routerLink]="'/administrate/user'">Пользователи</a>
+    </li>
+    <li class="nav-item btn btn-outline-dark border-0 col-lg-12 col-sm-3">
+      <a class="nav-link w-100 h-auto h4 text-uppercase" [routerLink]="'/administrate/category'">Категории</a>
+    </li>
+    <li class="nav-item btn btn-outline-dark border-0 col-lg-12 col-sm-3">
+      <a class="nav-link w-100 h-auto h4 text-uppercase" [routerLink]="'/administrate/feature'">Характеристики</a>
+    </li>
+    <li class="nav-item btn btn-outline-dark border-0 col-lg-12 col-sm-3">
+      <a class="nav-link w-100 h-auto h4 text-uppercase" [routerLink]="'/administrate/address'">Адреса</a>
+    </li>
+  </ul>
+  <div class="col-lg-10 col-sm-12">
+    <router-outlet></router-outlet>
+  </div>
+</div>

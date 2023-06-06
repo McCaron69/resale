@@ -1,0 +1,197 @@
+<div class="container d-flex justify-content-center">
+  <div class="card mt-5 bg-opacity-50 bg-dark">
+    <div class="card-body">
+      <form [formGroup]="loginForm" (ngSubmit)="doLogin()"
+            class="bg-opacity-25 d-flex flex-column">
+        <div class="mb-4">
+          <input formControlName="login" class="form-control bg-opacity-50 bg-white"
+                 type="text"
+                 name="login"
+                 id="login"
+                 placeholder="Имя пользователя" >
+        </div>
+        <div class="mb-4">
+          <input class="form-control bg-opacity-50 bg-white"
+                 formControlName="password"
+                 type="password"
+                 name="password"
+                 id="password"
+                 placeholder="Пароль">
+          <div class="bg-danger bg-opacity-25 form-control"
+               *ngIf="loginForm.get('login')?.errors?.wrong">
+            Неправильные имя пользователя или пароль</div>
+        </div>
+        <div>
+          <button class="btn btn-primary" type="submit">Войти</button>
+          <a type="button" data-bs-target="#registration-modal"
+             class="btn btn-white btn-sm bg-opacity-75 col-8" data-bs-toggle="modal">
+            <div class="h5 text-dark">Регистрация</div>
+          </a>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="registration-modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title">Регистрация</div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="registrationForm" (ngSubmit)="registration()"
+              class="bg-opacity-25 m-2 col-12 d-flex flex-column align-items-center">
+          <input class="col-12 form-control-lg bg-opacity-50 bg-white mt-2"
+                 type="text"
+                 name="login"
+                 id="r-username"
+                 placeholder="Введите имя пользователя" formControlName="login">
+          <div class="col-12" *ngIf="registrationForm.get('login')?.invalid &&
+          (registrationForm.get('login')?.dirty ||
+          registrationForm.get('login')?.touched)">
+            <div class="bg-danger bg-opacity-25 form-control"
+                 *ngIf="registrationForm.get('login')?.errors?.required">
+              Имя пользователя обязательное для заполнения</div>
+            <div class="bg-danger bg-opacity-25 form-control"
+                 *ngIf="registrationForm.get('login')?.errors?.minlength">
+              Имя пользователя должно быть не меньше 4 символов</div>
+            <div class="bg-danger bg-opacity-25 form-control"
+                 *ngIf="registrationForm.get('login')?.errors?.maxlength">
+              Имя пользователя должно быть не больше 20 символов</div>
+            <div class="bg-danger bg-opacity-25 form-control"
+                 *ngIf="registrationForm.get('login')?.errors?.pattern">
+              Имя пользователя должно начинаться с латинской буквы и состоять
+              только из латинских букв, цифр и знака подчеркивания</div>
+          </div>
+          <input class="form-control-lg col-12 bg-opacity-50 bg-white mt-2"
+                 type="password"
+                 name="password"
+                 id="r-password"
+                 placeholder="Введите пароль" required formControlName="password">
+          <div class="col-12" *ngIf="registrationForm.get('password')?.invalid &&
+          (registrationForm.get('password')?.dirty ||
+          registrationForm.get('password')?.touched)">
+            <div class="bg-danger bg-opacity-25 form-control"
+                 *ngIf="registrationForm.get('password')?.errors?.required">
+              Пароль обязательный для заполнения</div>
+            <div class="bg-danger bg-opacity-25 form-control"
+                 *ngIf="registrationForm.get('password')?.errors?.minlength">
+              Пароль должен быть не меньше 8 символов</div>
+            <div class="bg-danger bg-opacity-25 form-control"
+                 *ngIf="registrationForm.get('password')?.errors?.maxlength">
+              Пароль должен быть не больше 64 символов</div>
+          </div>
+          <input class="form-control-lg col-12 bg-opacity-50 bg-white mt-2"
+                 type="password"
+                 name="password-confirmation"
+                 id="r-password-с"
+                 placeholder="Подтвердите пароль" required formControlName="confPassword">
+          <div class="col-12" *ngIf="registrationForm.get('confPassword')?.invalid &&
+          (registrationForm.get('confPassword')?.dirty ||
+          registrationForm.get('confPassword')?.touched)">
+            <div class="bg-danger bg-opacity-25 form-control"
+                 *ngIf="registrationForm.get('confPassword')?.errors?.required">
+               Подтверждение пароля обязательное для заполнения</div>
+            <div class="bg-danger bg-opacity-25 form-control"
+                 *ngIf="registrationForm.get('confPassword')?.errors?.confirmedValidator">
+              Пароли не совпадают</div>
+          </div>
+          <input class="form-control-lg col-12 bg-opacity-50 bg-white mt-2"
+                 type="text"
+                 name="firstname"
+                 id="firstname"
+                 placeholder="Введите имя" required formControlName="firstName">
+          <div class="col-12" *ngIf="registrationForm.get('firstName')?.invalid &&
+          (registrationForm.get('firstName')?.dirty ||
+          registrationForm.get('firstName')?.touched)">
+            <div class="bg-danger bg-opacity-25 form-control"
+                 *ngIf="registrationForm.get('firstName')?.errors?.required">
+              Имя обязательно для заполнения</div>
+            <div class="bg-danger bg-opacity-25 form-control"
+                 *ngIf="registrationForm.get('firstName')?.errors?.minlength">
+              Имя должно быть не меньше 2 символов</div>
+            <div class="bg-danger bg-opacity-25 form-control"
+                 *ngIf="registrationForm.get('firstName')?.errors?.maxlength">
+              Имя должно быть не больше 20 символов</div>
+            <div class="bg-danger bg-opacity-25 form-control"
+                 *ngIf="registrationForm.get('firstName')?.errors?.pattern">
+              Имя должно состоять только из латинских или русских букв</div>
+          </div>
+          <input class="form-control-lg col-12 bg-opacity-50 bg-white mt-2"
+                 type="text"
+                 name="lastname"
+                 id="lastname"
+                 placeholder="Введите фамилию" required formControlName="lastName">
+          <div class="col-12" *ngIf="registrationForm.get('lastName')?.invalid &&
+          (registrationForm.get('lastName')?.dirty ||
+          registrationForm.get('lastName')?.touched)">
+            <div class="bg-danger bg-opacity-25 form-control"
+                 *ngIf="registrationForm.get('lastName')?.errors?.required">
+              Фамилия обязательна для заполнения</div>
+            <div class="bg-danger bg-opacity-25 form-control"
+                 *ngIf="registrationForm.get('lastName')?.errors?.minlength">
+              фамилия должна быть не меньше 2 символов</div>
+            <div class="bg-danger bg-opacity-25 form-control"
+                 *ngIf="registrationForm.get('lastName')?.errors?.maxlength">
+              Фамилия должна быть не больше 20 символов</div>
+            <div class="bg-danger bg-opacity-25 form-control"
+                 *ngIf="registrationForm.get('lastName')?.errors?.pattern">
+              Фамилия должна состоять только из латинских или русских букв</div>
+          </div>
+          <input class="form-control-lg col-12 bg-opacity-50 bg-white mt-2"
+                 type="email"
+                 name="email"
+                 id="email"
+                 placeholder="Введите электронную почту" required formControlName="email">
+          <div class="col-12" *ngIf="registrationForm.get('email')?.invalid &&
+          (registrationForm.get('email')?.dirty ||
+          registrationForm.get('email')?.touched)">
+            <div class="bg-danger bg-opacity-25 form-control"
+                 *ngIf="registrationForm.get('email')?.errors?.pattern">
+              Электронная почта не соответствует формату</div>
+          </div>
+          <input class="form-control-lg col-12 bg-opacity-50 bg-white mt-2"
+                 type="date"
+                 name="age"
+                 id="age"
+                 placeholder="Введите дату рождения" value="2000-01-01" required formControlName="age">
+          <div class="col-12" *ngIf="registrationForm.get('age')?.invalid &&
+          (registrationForm.get('age')?.dirty ||
+          registrationForm.get('age')?.touched)">
+            <div class="bg-danger bg-opacity-25 form-control"
+                 *ngIf="registrationForm.get('age')?.errors?.required">
+              Дата рождения обязательна для заполнения</div>
+            <div class="bg-danger bg-opacity-25 form-control"
+                 *ngIf="registrationForm.get('age')?.errors?.young">
+              Вы должны быть старше 18 лет</div>
+            <div class="bg-danger bg-opacity-25 form-control"
+                 *ngIf="registrationForm.get('age')?.errors?.old">
+              Возраст не должен превышать 100 лет</div>
+          </div>
+          <input class="form-control-lg col-12 bg-opacity-50 bg-white mt-2"
+                 type="text"
+                 name="phone"
+                 id="phone"
+                 placeholder="Введите телефон" formControlName="phone">
+          <div class="col-12" *ngIf="registrationForm.get('phone')?.invalid &&
+          (registrationForm.get('phone')?.dirty ||
+          registrationForm.get('phone')?.touched)">
+            <div class="bg-danger bg-opacity-25 form-control"
+                 *ngIf="registrationForm.get('phone')?.errors?.pattern">
+              телефон не соответстфует формату</div>
+          </div>
+          <div class="bg-danger bg-opacity-25 form-control"
+               *ngIf="registrationForm.get('login')?.errors?.exist">
+            Пользователь с таким именем уже существует</div>
+          <button [disabled]="registrationForm.invalid" class="btn btn-success col-6 mt-2" type="submit">Зарегистрироваться</button>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button id="closeModal" type="button" class="btn btn-danger" data-bs-dismiss="modal">Закрыть</button>
+      </div>
+    </div>
+  </div>
+</div>

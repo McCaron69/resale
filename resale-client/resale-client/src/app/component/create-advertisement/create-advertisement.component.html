@@ -1,0 +1,195 @@
+<div class="container d-flex justify-content-center">
+  <form [formGroup]="advertisement" (ngSubmit)="createAdvertisement()"
+        class="col-8 mt-5">
+    <input class="col-12 form-control-lg bg-opacity-50 bg-white mt-2"
+           type="text"
+           name="name"
+           id="name"
+           placeholder="Название" required formControlName="name">
+    <div class="col-12" *ngIf="advertisement.get('name')?.invalid &&
+          (advertisement.get('name')?.dirty ||
+          advertisement.get('name')?.touched)">
+      <div class="bg-danger bg-opacity-25 form-control"
+           *ngIf="advertisement.get('name')?.errors?.required">
+        название обязательное для заполнения</div>
+      <div class="bg-danger bg-opacity-25 form-control"
+           *ngIf="advertisement.get('name')?.errors?.minlength">
+        Название должно быть не меньше 2 символов</div>
+      <div class="bg-danger bg-opacity-25 form-control"
+           *ngIf="advertisement.get('name')?.errors?.maxLength">
+        Название должно не превышать 50 символов</div>
+    </div>
+    <input class="col-12 form-control-lg bg-opacity-50 bg-white mt-2"
+           type="text"
+           name="description"
+           id="description"
+           placeholder="Описание" required formControlName="description">
+    <div class="col-12" *ngIf="advertisement.get('description')?.invalid &&
+          (advertisement.get('description')?.dirty ||
+          advertisement.get('description')?.touched)">
+      <div class="bg-danger bg-opacity-25 form-control"
+           *ngIf="advertisement.get('description')?.errors?.maxLength">
+        Превышен лимит на 1000 символов</div>
+    </div>
+    <input class="col-12 form-control-lg bg-opacity-50 bg-white mt-2"
+           type="number"
+           name="price"
+           id="price"
+           placeholder="Цена"
+           required
+           formControlName="price">
+    <div class="col-12" *ngIf="advertisement.get('price')?.invalid &&
+          (advertisement.get('price')?.dirty ||
+          advertisement.get('price')?.touched)">
+      <div class="bg-danger bg-opacity-25 form-control"
+           *ngIf="advertisement.get('price')?.errors?.min">
+        Цена не может быть отрицательной</div>
+      <div class="bg-danger bg-opacity-25 form-control"
+           *ngIf="advertisement.get('price')?.errors?.max">
+        Ограничение по цене 50000 EUR</div>
+    </div>
+    <input class="col-12 form-control-lg bg-opacity-50 bg-white mt-2"
+           (click)="open(content)"
+           placeholder="Выбрать категорию"
+           value="{{currentCategory?.name}}">
+    <div class="col-12 form-control-lg bg-opacity-50 bg-white mt-2 d-flex" aria-placeholder="images">
+      <div class="col-10 d-flex flex-column card-group">
+        <div class="d-flex ms-3 times-body col-10" *ngFor="let image of images">
+          <span>{{image.name}}</span>
+          <div class="ms-1 times" (click)="deleteImage(image)"><fa-icon [icon]="faCross"></fa-icon></div>
+        </div>
+      </div>
+      <label class="col-2 btn btn-success position-relative end-0" style="height: 40px">
+        <input type="file" (change)="onFileSelect($event)">
+        <span><fa-icon [icon]="faPlus"></fa-icon></span>
+      </label>
+    </div>
+
+    <div (click)="openAddressModal(addressModal)" class="col-12 form-control-lg bg-opacity-50 bg-white mt-2">
+      <label>
+        <span *ngIf="currentAddress">{{ addressService.getFormattedAddress(currentAddress) }}</span>
+        <span *ngIf="!currentAddress">Выбрать адрес</span>
+      </label>
+    </div>
+
+    <label *ngIf="features.length" (click)="showFeatures = !showFeatures" class="btn btn-warning bg-opacity-25">Характеристики</label>
+    <div *ngIf="showFeatures">
+    <div *ngFor="let feature of features" class="col-12 form-control-lg bg-opacity-50 bg-white mt-2 p-1 d-flex">
+      <label class="col-4">{{feature.name}}</label>:
+      <input type="text" (change)="changeFeatureValue($event, feature)" class="bg-opacity-10 bg-white ps-2 col-8 my-0">
+    </div>
+    </div>
+    <div class="p-3">
+      <input type="submit" value="Создать объявление" class="btn btn-primary col-12 p-2">
+    </div>
+  </form>
+</div>
+
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Категории</h4>
+    <div class="d-flex ms-5">
+      <div class="form-outline">
+        <input [formControl]="words" (change)="searchCategories(0)" type="search" id="form1" class="form-control"
+               placeholder="Search"/>
+      </div>
+      <button type="button" class="btn btn-primary" (click)="searchCategories(0)">
+        <fa-icon [icon]="faSearch"></fa-icon>
+      </button>
+    </div>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <div>
+      <div style="min-height: 600px">
+        <table class="table">
+          <tbody>
+          <tr *ngFor="let category of categories">
+            <td class="col-10">{{category.name}}</td>
+            <td>
+              <button class="btn btn-success" (click)="chooseCategory(category,modal)">Выбрать</button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      <ul class="pagination bottom-0" *ngIf="categories.length">
+        <li class="page-item" *ngIf="categoryPage!=0"><a class="page-link"
+               (click)="searchCategories(0)">1</a>
+        <li class="page-item" *ngIf="categoryPage>3"><a class="page-link">. . .</a></li>
+        <li class="page-item" *ngIf="categoryPage>2"><a class="page-link"
+               (click)="searchCategories(categoryPage-2)">{{categoryPage - 1}}</a>
+        </li>
+        <li class="page-item" *ngIf="categoryPage>1"><a class="page-link"
+               (click)="searchCategories(categoryPage-1)">{{categoryPage}}</a>
+        </li>
+        <li disabled="true" class="page-item"><a class="page-link">{{categoryPage + 1}}</a></li>
+        <li class="page-item" *ngIf="categoryPage<totalCategoryPage-2"><a class="page-link"
+               (click)="searchCategories(categoryPage+1)">{{categoryPage + 2}}</a>
+        </li>
+        <li class="page-item" *ngIf="categoryPage<totalCategoryPage-3"><a class="page-link"
+               (click)="searchCategories(categoryPage+2)">{{categoryPage + 3}}</a>
+        <li class="page-item" *ngIf="categoryPage<totalCategoryPage - 4"><a class="page-link">. . .</a></li>
+        <li class="page-item" *ngIf="categoryPage!=totalCategoryPage-1"><a class="page-link"
+               (click)="searchCategories(totalCategoryPage-1)">{{totalCategoryPage}}</a>
+        </li>
+      </ul>
+    </div>
+
+  </div>
+</ng-template>
+
+<ng-template #addressModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Адреса</h4>
+    <div class="d-flex ms-5">
+      <div class="form-outline">
+        <input [formControl]="words" (change)="searchAddresses(0)" type="search" id="form2" class="form-control"
+               placeholder="Search"/>
+      </div>
+      <button type="button" class="btn btn-primary" (click)="searchAddresses(0)">
+        <fa-icon [icon]="faSearch"></fa-icon>
+      </button>
+    </div>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <div>
+      <div style="min-height: 600px">
+        <table class="table">
+          <tbody>
+          <tr *ngFor="let address of addresses">
+            <td class="col-10">{{ addressService.getFormattedAddress(address) }}</td>
+            <td>
+              <button class="btn btn-success" (click)="chooseAddress(address,modal)">Выбрать</button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      <ul class="pagination bottom-0" *ngIf="addresses.length">
+        <li class="page-item" *ngIf="addressPage!=0"><a class="page-link"
+                                                        (click)="searchCategories(0)">1</a>
+        <li class="page-item" *ngIf="addressPage>3"><a class="page-link">. . .</a></li>
+        <li class="page-item" *ngIf="addressPage>2"><a class="page-link"
+                                                       (click)="searchCategories(addressPage-2)">{{addressPage - 1}}</a>
+        </li>
+        <li class="page-item" *ngIf="addressPage>1"><a class="page-link"
+                                                       (click)="searchCategories(addressPage-1)">{{addressPage}}</a>
+        </li>
+        <li disabled="true" class="page-item"><a class="page-link">{{addressPage + 1}}</a></li>
+        <li class="page-item" *ngIf="addressPage<totalAddressPage-2"><a class="page-link"
+                                                                        (click)="searchCategories(addressPage+1)">{{addressPage + 2}}</a>
+        </li>
+        <li class="page-item" *ngIf="addressPage<totalAddressPage-3"><a class="page-link"
+                                                                        (click)="searchCategories(addressPage+2)">{{addressPage + 3}}</a>
+        <li class="page-item" *ngIf="addressPage<totalAddressPage - 4"><a class="page-link">. . .</a></li>
+        <li class="page-item" *ngIf="addressPage!=totalAddressPage-1"><a class="page-link"
+                                                                         (click)="searchCategories(totalAddressPage-1)">{{totalAddressPage}}</a>
+        </li>
+      </ul>
+    </div>
+
+  </div>
+</ng-template>

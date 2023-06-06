@@ -1,0 +1,93 @@
+<div class="container-fluid d-flex justify-content-center flex-column">
+
+  <div class="d-flex justify-content-center flex-column col-12">
+    <h3 class="text-center">Новый адрес</h3>
+    <form [formGroup]="address" class="bg-opacity-50 bg-white form-control">
+      <div class="form-control bg-opacity-50 bg-white d-flex flex-column align-content-center">
+        <label class="col-3">страна</label>
+        <input formControlName="country" class="form-control bg-white bg-opacity-10">
+        <div class="col-12" *ngIf="address.get('country')?.invalid &&
+          (address.get('country')?.dirty ||
+          address.get('country')?.touched)">
+          <div class="bg-danger bg-opacity-25 form-control"
+               *ngIf="address.get('country')?.errors?.required">
+            Страна обязательная для заполнения
+          </div>
+          <div class="bg-danger bg-opacity-25 form-control"
+               *ngIf="address.get('country')?.errors?.minlength">
+            Минимальное количество символов 2
+          </div>
+          <div class="bg-danger bg-opacity-25 form-control"
+               *ngIf="address.get('country')?.errors?.maxlength">
+            Максимальное количество символов 50
+          </div>
+          <div class="bg-danger bg-opacity-25 form-control"
+               *ngIf="address.get('country')?.errors?.pattern">
+            Можно использовать только буквы, пробел и дефис
+          </div>
+        </div>
+      </div>
+      <div class="form-control bg-opacity-50 bg-white d-flex flex-column align-content-center">
+        <label class="col-3">область</label>
+        <input formControlName="region" class="form-control bg-white bg-opacity-10">
+        <div class="col-12" *ngIf="address.get('region')?.invalid &&
+          (address.get('region')?.dirty ||
+          address.get('region')?.touched)">
+          <div class="bg-danger bg-opacity-25 form-control"
+               *ngIf="address.get('region')?.errors?.minlength">
+            Минимальное количество символов 2
+          </div>
+          <div class="bg-danger bg-opacity-25 form-control"
+               *ngIf="address.get('region')?.errors?.maxlength">
+            Максимальное количество символов 50
+          </div>
+          <div class="bg-danger bg-opacity-25 form-control"
+               *ngIf="address.get('region')?.errors?.pattern">
+            Можно использовать только буквы, пробел и дефис
+          </div>
+        </div>
+      </div>
+      <div class="form-control bg-opacity-50 bg-white d-flex flex-column align-content-center">
+        <label class="col-3">город</label>
+        <input formControlName="city" class="form-control bg-white bg-opacity-10">
+        <div class="col-12" *ngIf="address.get('city')?.invalid &&
+          (address.get('city')?.dirty ||
+          address.get('city')?.touched)">
+          <div class="bg-danger bg-opacity-25 form-control"
+               *ngIf="address.get('city')?.errors?.minlength">
+            Минимальное количество символов 2
+          </div>
+          <div class="bg-danger bg-opacity-25 form-control"
+               *ngIf="address.get('city')?.errors?.maxlength">
+            Максимальное количество символов 50
+          </div>
+          <div class="bg-danger bg-opacity-25 form-control"
+               *ngIf="address.get('city')?.errors?.pattern">
+            Можно использовать только буквы, пробел и дефис
+          </div>
+        </div>
+      </div>
+      <div class="form-control bg-opacity-50 bg-white d-flex flex-column align-content-center">
+        <label class="col-3">район</label>
+        <input formControlName="part" class="form-control bg-white bg-opacity-10">
+        <div class="col-12" *ngIf="address.get('part')?.invalid &&
+          (address.get('part')?.dirty ||
+          address.get('part')?.touched)">
+          <div class="bg-danger bg-opacity-25 form-control"
+               *ngIf="address.get('part')?.errors?.minlength">
+            Минимальное количество символов 2
+          </div>
+          <div class="bg-danger bg-opacity-25 form-control"
+               *ngIf="address.get('part')?.errors?.maxlength">
+            Максимальное количество символов 50
+          </div>
+          <div class="bg-danger bg-opacity-25 form-control"
+               *ngIf="address.get('part')?.errors?.pattern">
+            Можно использовать только буквы, пробел и дефис
+          </div>
+        </div>
+      </div>
+      <input type="submit" [disabled]="address.invalid" class="btn btn-primary" value="создать" (click)="createAddress()">
+    </form>
+  </div>
+</div>

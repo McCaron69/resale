@@ -1,0 +1,97 @@
+<div class="container-fluid">
+  <h3 class="pt-3 pb-2 px-1">Новая категория</h3>
+  <form class="bg-opacity-50 bg-white form-control">
+    <label class="col-3">Название</label>
+    <div>
+      <input type="text" class="form-control bg-white bg-opacity-10" [formControl]="categoryName">
+      <div class="col-12" *ngIf="categoryName.invalid &&
+          (categoryName.dirty ||
+          categoryName.touched)">
+        <div class="bg-danger bg-opacity-25 form-control"
+             *ngIf="categoryName.errors?.minlength">
+          Минимальное количество символов 2
+        </div>
+        <div class="bg-danger bg-opacity-25 form-control"
+             *ngIf="categoryName.errors?.maxlength">
+          Максимальное количество символов 50
+        </div>
+        <div class="bg-danger bg-opacity-25 form-control"
+             *ngIf="categoryName.errors?.required">
+          Название обязательное для заполнения
+        </div>
+      </div>
+    </div>
+    <label>Родительская категория</label>
+    <div class="form-control bg-opacity-10 bg-white d-flex">
+      <label (click)="openCategoryModal(content)" class="col-11">
+        <span *ngIf="!parent">Отсутствует</span>
+        <span *ngIf="parent">{{parent.name}}</span>
+      </label>
+      <span *ngIf="parent" (click)="parent = null"><fa-icon [icon]="faTimes"></fa-icon></span>
+    </div>
+    <input type="submit" class="btn btn-primary mt-3 mb-2" value="Создать" (click)="createCategory()">
+  </form>
+</div>
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <div >
+      <div class="d-flex">
+        <div class="form-outline">
+          <input [(ngModel)]="words" (change)="searchCategories(0)" type="search" id="form2" class="form-control"
+                 placeholder="Поиск"/>
+        </div>
+        <button type="button" class="btn btn-primary" (click)="searchCategories(0)">
+          <fa-icon [icon]="faSearch"></fa-icon>
+        </button>
+      </div>
+      <div>
+        <table *ngIf="searchCategoryResult.length" class="table table-hover">
+          <thead>
+          <tr>
+            <th>Название</th>
+            <th>Родительская категория</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let category of searchCategoryResult">
+            <td>{{category.name}}</td>
+            <td>
+              <div *ngIf="category.parent">{{category.parent.name}}</div>
+            </td>
+            <td>
+              <button class="btn btn-success" (click)="changeParent(category, modal)">выбрать</button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+        <ul class="pagination position-relative m-0">
+          <li class="page-item" *ngIf="categoryPage>0"><a class="page-link" (click)="searchCategories(0)">1</a>
+          </li>
+          <li class="page-item" *ngIf="categoryPage>3">. . .</li>
+          <li class="page-item" *ngIf="categoryPage>2"><a class="page-link"
+                                                               (click)="searchCategories(categoryPage-2)">{{categoryPage - 1}}</a>
+          </li>
+          <li class="page-item" *ngIf="categoryPage>1"><a class="page-link"
+                                                               (click)="searchCategories(categoryPage-1)">{{categoryPage}}</a>
+          </li>
+          <li disabled="true" *ngIf="categoryPage" class="page-item"><a
+            class="page-link">{{categoryPage + 1}}</a></li>
+          <li class="page-item" *ngIf="categoryPage<totalCategoryPages-2"><a class="page-link"
+                                                                                       (click)="searchCategories(categoryPage+1)">{{categoryPage + 2}}</a>
+          </li>
+          <li class="page-item" *ngIf="categoryPage<totalCategoryPages-3"><a class="page-link"
+                                                                                       (click)="searchCategories(categoryPage+2)">{{categoryPage + 3}}</a>
+          </li>
+          <li class="page-item" *ngIf="categoryPage<totalCategoryPages-4">. . .</li>
+          <li class="page-item" *ngIf="categoryPage<totalCategoryPages-1"><a class="page-link"
+                                                                                       (click)="searchCategories(totalCategoryPages-1)">{{totalCategoryPages}}</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</ng-template>

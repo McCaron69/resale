@@ -1,0 +1,149 @@
+<div class="container-fluid">
+  <div style="min-height: 500px" class="table-responsive">
+    <table class="table table-hover">
+      <thead>
+      <tr>
+        <th>Страна</th>
+        <th>Область</th>
+        <th>Город</th>
+        <th>Район</th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let address of addresses" (click)="open(content,address)">
+        <td>{{address.country}}</td>
+        <td>{{address.region}}</td>
+        <td>{{address.city}}</td>
+        <td>{{address.part}}</td>
+        <td>
+          <button class="btn btn-danger" (click)="deleteAddress(address)">
+            удалить
+          </button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="d-flex">
+    <div class="col-9">
+      <ul class="pagination position-relative m-0">
+        <li class="page-item" *ngIf="page!=0"><a class="page-link" (click)="getAddresses(0)">1</a></li>
+        <li disabled="true" *ngIf="page>3" class="page-item"><a class="page-link">. . .</a></li>
+        <li class="page-item" *ngIf="page>2"><a class="page-link" (click)="getAddresses(page-2)">{{page - 1}}</a></li>
+        <li class="page-item" *ngIf="page>1"><a class="page-link" (click)="getAddresses(page-1)">{{page}}</a></li>
+        <li disabled="true" class="page-item"><a class="page-link">{{page + 1}}</a></li>
+        <li class="page-item" *ngIf="page<totalPages-2"><a class="page-link"
+                                                           (click)="getAddresses(page+1)">{{page + 2}}</a>
+        </li>
+        <li class="page-item" *ngIf="page<totalPages-3"><a class="page-link"
+                                                           (click)="getAddresses(page+2)">{{page + 3}}</a>
+        </li>
+        <li disabled="true" *ngIf="page<totalPages-4" class="page-item"><a class="page-link">. . .</a></li>
+        <li class="page-item" *ngIf="page!=totalPages-1"><a class="page-link"
+                                                            (click)="getAddresses(totalPages-1)">{{totalPages}}</a></li>
+      </ul>
+    </div>
+    <div class="d-flex justify-content-end col-2">
+      <button [routerLink]="'/address/create'" class="btn btn-sm btn-success">Добавить</button>
+    </div>
+  </div>
+</div>
+
+
+<ng-template #content let-modal class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Адрес</h4>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="current" (ngSubmit)="updateAddress(modal)">
+        <label for="country">Страна</label>
+        <input type="text" name="country" id="country" formControlName="country"
+               class="col-12 form-control-lg bg-opacity-50 bg-white mt-2 mb-3">
+        <div class="col-12" *ngIf="current.get('country')?.invalid &&
+          (current.get('country')?.dirty ||
+          current.get('country')?.touched)">
+          <div class="bg-danger bg-opacity-25 form-control"
+               *ngIf="current.get('country')?.errors?.required">
+            Страна обязательная для заполнения
+          </div>
+          <div class="bg-danger bg-opacity-25 form-control"
+               *ngIf="current.get('country')?.errors?.minlength">
+            Минимальное количество символов 2
+          </div>
+          <div class="bg-danger bg-opacity-25 form-control"
+               *ngIf="current.get('country')?.errors?.maxlength">
+            Максимальное количество символов 50
+          </div>
+          <div class="bg-danger bg-opacity-25 form-control"
+               *ngIf="current.get('country')?.errors?.pattern">
+            Можно использовать только буквы, пробел и дефис
+          </div>
+        </div>
+        <label for="region">Область</label>
+        <input type="text" name="region" id="region" formControlName="region"
+               class="col-12 form-control-lg bg-opacity-50 bg-white mt-2 mb-3">
+        <div class="col-12" *ngIf="current.get('region')?.invalid &&
+          (current.get('region')?.dirty ||
+          current.get('region')?.touched)">
+          <div class="bg-danger bg-opacity-25 form-control"
+               *ngIf="current.get('region')?.errors?.minlength">
+            Минимальное количество символов 2
+          </div>
+          <div class="bg-danger bg-opacity-25 form-control"
+               *ngIf="current.get('region')?.errors?.maxlength">
+            Максимальное количество символов 50
+          </div>
+          <div class="bg-danger bg-opacity-25 form-control"
+               *ngIf="current.get('region')?.errors?.pattern">
+            Можно использовать только буквы, пробел и дефис
+          </div>
+        </div>
+        <label for="city">Город</label>
+        <input type="text" name="city" id="city" formControlName="city"
+               class="col-12 form-control-lg bg-opacity-50 bg-white mt-2 mb-3">
+        <div class="col-12" *ngIf="current.get('city')?.invalid &&
+          (current.get('city')?.dirty ||
+          current.get('city')?.touched)">
+          <div class="bg-danger bg-opacity-25 form-control"
+               *ngIf="current.get('city')?.errors?.minlength">
+            Минимальное количество символов 2
+          </div>
+          <div class="bg-danger bg-opacity-25 form-control"
+               *ngIf="current.get('city')?.errors?.maxlength">
+            Максимальное количество символов 50
+          </div>
+          <div class="bg-danger bg-opacity-25 form-control"
+               *ngIf="current.get('city')?.errors?.pattern">
+            Можно использовать только буквы, пробел и дефис
+          </div>
+        </div>
+        <label for="part">Район</label>
+        <input type="text" name="part" id="part" formControlName="part"
+               class="col-12 form-control-lg bg-opacity-50 bg-white mt-2 mb-3">
+        <div class="col-12" *ngIf="current.get('part')?.invalid &&
+          (current.get('part')?.dirty ||
+          current.get('part')?.touched)">
+          <div class="bg-danger bg-opacity-25 form-control"
+               *ngIf="current.get('part')?.errors?.minlength">
+            Минимальное количество символов 2
+          </div>
+          <div class="bg-danger bg-opacity-25 form-control"
+               *ngIf="current.get('part')?.errors?.maxlength">
+            Максимальное количество символов 50
+          </div>
+          <div class="bg-danger bg-opacity-25 form-control"
+               *ngIf="current.get('part')?.errors?.pattern">
+            Можно использовать только буквы, пробел и дефис
+          </div>
+        </div>
+        <input type="hidden" formControlName="addressId">
+        <div class="d-flex justify-content-end">
+          <input type="submit" value="обновить" [disabled]="current.invalid" class="btn btn-warning end-0">
+        </div>
+      </form>
+    </div>
+  </div>
+</ng-template>

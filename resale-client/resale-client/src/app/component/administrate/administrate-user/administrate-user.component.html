@@ -1,0 +1,157 @@
+<div class="container-fluid">
+  <div style="min-height: 600px" class="table-responsive">
+    <table class="table table-hover">
+      <thead>
+      <tr>
+        <th>Имя пользователя</th>
+        <th>Имя</th>
+        <th>Фамилия</th>
+        <th>Дата рождения</th>
+        <th>Телефон</th>
+        <th>Электронная почта</th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let user of users" (click)="open(content,user)">
+        <td>{{user.login}}</td>
+        <td>{{user.firstName}}</td>
+        <td>{{user.lastName}}</td>
+        <td>{{user.age}}</td>
+        <td>{{user.phone}}</td>
+        <td>{{user.email}}</td>
+        <td>
+          <button *ngIf="!isAdmin(user)" class="btn btn-danger" (click)="deleteUser(user)">
+            удалить
+          </button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <ul class="pagination">
+    <li class="page-item" *ngIf="page!=0"><a class="page-link" (click)="getUsers(0)">1</a></li>
+    <li class="page-item" *ngIf="page>2"><a class="page-link" (click)="getUsers(page-2)">{{page - 1}}</a></li>
+    <li class="page-item" *ngIf="page>1"><a class="page-link" (click)="getUsers(page-1)">{{page}}</a></li>
+    <li disabled="true" class="page-item"><a class="page-link">{{page + 1}}</a></li>
+    <li class="page-item" *ngIf="page<totalPages-2"><a class="page-link" (click)="getUsers(page+1)">{{page + 2}}</a>
+    </li>
+    <li class="page-item" *ngIf="page<totalPages-3"><a class="page-link" (click)="getUsers(page+2)">{{page + 3}}</a>
+    </li>
+    <li class="page-item" *ngIf="page!=totalPages-1"><a class="page-link" (click)="getUsers(page+1)">{{totalPages}}</a>
+    </li>
+  </ul>
+</div>
+
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Редактирование пользователя</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="form" (ngSubmit)="updateUser(modal)">
+      <label for="login">Имя пользователя</label>
+      <input type="text" name="login" id="login" formControlName="login"
+             class="col-12 form-control-lg bg-opacity-50 bg-white mt-2 mb-3">
+      <div class="col-12" *ngIf="form.get('login')?.invalid &&
+          (form.get('login')?.dirty ||
+          form.get('login')?.touched)">
+        <div class="bg-danger bg-opacity-25 form-control"
+             *ngIf="form.get('login')?.errors?.required">
+          Имя пользователя обязательное для заполнения</div>
+        <div class="bg-danger bg-opacity-25 form-control"
+             *ngIf="form.get('login')?.errors?.minlength">
+          Имя пользователя должно быть не меньше 4 символов</div>
+        <div class="bg-danger bg-opacity-25 form-control"
+             *ngIf="form.get('login')?.errors?.maxlength">
+          Имя пользователя должно быть не больше 20 символов</div>
+        <div class="bg-danger bg-opacity-25 form-control"
+             *ngIf="form.get('login')?.errors?.pattern">
+          Имя пользователя должно начинаться с латинской буквы и состоять
+          только из латинских букв, цифр и знака подчеркивания</div>
+      </div>
+      <label for="firstName">Имя</label>
+      <input type="text" name="firstName" id="firstName" formControlName="firstName"
+             class="col-12 form-control-lg bg-opacity-50 bg-white mt-2 mb-3">
+      <div class="col-12" *ngIf="form.get('firstName')?.invalid &&
+          (form.get('firstName')?.dirty ||
+          form.get('firstName')?.touched)">
+        <div class="bg-danger bg-opacity-25 form-control"
+             *ngIf="form.get('firstName')?.errors?.required">
+          Имя обязательно для заполнения</div>
+        <div class="bg-danger bg-opacity-25 form-control"
+             *ngIf="form.get('firstName')?.errors?.minlength">
+          Имя должно быть не меньше 2 символов</div>
+        <div class="bg-danger bg-opacity-25 form-control"
+             *ngIf="form.get('firstName')?.errors?.maxlength">
+          Имя должно быть не больше 20 символов</div>
+        <div class="bg-danger bg-opacity-25 form-control"
+             *ngIf="form.get('firstName')?.errors?.pattern">
+          Имя должно состоять только из латинских или русских букв</div>
+      </div>
+      <label for="lastName">Фамилия</label>
+      <input type="text" name="lastName" id="lastName" formControlName="lastName"
+             class="col-12 form-control-lg bg-opacity-50 bg-white mt-2 mb-3">
+      <div class="col-12" *ngIf="form.get('lastName')?.invalid &&
+          (form.get('lastName')?.dirty ||
+          form.get('lastName')?.touched)">
+        <div class="bg-danger bg-opacity-25 form-control"
+             *ngIf="form.get('lastName')?.errors?.required">
+          Фамилия обязательна для заполнения</div>
+        <div class="bg-danger bg-opacity-25 form-control"
+             *ngIf="form.get('lastName')?.errors?.minlength">
+          фамилия должна быть не меньше 2 символов</div>
+        <div class="bg-danger bg-opacity-25 form-control"
+             *ngIf="form.get('lastName')?.errors?.maxlength">
+          Фамилия должна быть не больше 20 символов</div>
+        <div class="bg-danger bg-opacity-25 form-control"
+             *ngIf="form.get('lastName')?.errors?.pattern">
+          Фамилия должна состоять только из латинских или русских букв</div>
+      </div>
+      <label for="email">Электронная почта</label>
+      <input type="email" name="email" id="email" formControlName="email"
+             class="col-12 form-control-lg bg-opacity-50 bg-white mt-2 mb-3">
+      <div class="col-12" *ngIf="form.get('email')?.invalid &&
+          (form.get('email')?.dirty ||
+          form.get('email')?.touched)">
+        <div class="bg-danger bg-opacity-25 form-control"
+             *ngIf="form.get('email')?.errors?.pattern">
+          Электронная почта не соответствует формату</div>
+      </div>
+      <label for="age">Дата рождения</label>
+      <input type="date" name="age" id="age" formControlName="age"
+             class="col-12 form-control-lg bg-opacity-50 bg-white mt-2 mb-3">
+      <div class="col-12" *ngIf="form.get('age')?.invalid &&
+          (form.get('age')?.dirty ||
+          form.get('age')?.touched)">
+        <div class="bg-danger bg-opacity-25 form-control"
+             *ngIf="form.get('age')?.errors?.required">
+          Дата рождения обязательна для заполнения</div>
+      </div>
+      <label for="phone">Телефон</label>
+      <input type="text" name="phone" id="phone" formControlName="phone"
+             class="col-12 form-control-lg bg-opacity-50 bg-white mt-2 mb-3">
+      <div class="col-12" *ngIf="form.get('phone')?.invalid &&
+          (form.get('phone')?.dirty ||
+          form.get('phone')?.touched)">
+        <div class="bg-danger bg-opacity-25 form-control"
+             *ngIf="form.get('phone')?.errors?.pattern">
+          телефон не соответстфует формату</div>
+      </div>
+      <label>Роли</label>
+      <div class="row">
+        <div *ngFor="let role of allRoles" class="col-4">
+          <input class="col-3 bg-opacity-50 bg-white" value="{{role.roleId}}" name="{{role.name}}"
+                 formArrayName="roles" type="checkbox" (change)="onCheckChange($event)"
+                 [checked]="checkedDef(role)">
+          <label class="col-9 h6 bg-opacity-50 bg-white">{{role.name}}</label>
+        </div>
+      </div>
+      <input type="hidden" formControlName="userId">
+      <div class="d-flex justify-content-end">
+        <input type="submit" value="обновить" class="btn btn-warning end-0">
+      </div>
+    </form>
+  </div>
+</ng-template>

@@ -1,0 +1,39 @@
+<div class="container-fluid">
+  <h3>Новая характеристика</h3>
+  <form [formGroup]="feature" class="bg-opacity-50 bg-white form-control">
+    <div class="form-control bg-opacity-50 bg-white d-flex align-content-center">
+      <label class="col-3 col-sm-2">название</label>
+      <input formControlName="name" class="form-control bg-white bg-opacity-10">
+      <div class="col-12" *ngIf="feature.get('name')?.invalid &&
+          (feature.get('name')?.dirty ||
+          feature.get('name')?.touched)">
+        <div class="bg-danger bg-opacity-25 form-control"
+             *ngIf="feature.get('name')?.errors?.minlength">
+          Минимальное количество символов 2
+        </div>
+        <div class="bg-danger bg-opacity-25 form-control"
+             *ngIf="feature.get('name')?.errors?.maxlength">
+          Максимальное количество символов 50
+        </div>
+        <div class="bg-danger bg-opacity-25 form-control"
+             *ngIf="feature.get('name')?.errors?.required">
+          Название обязательное для заполнения
+        </div>
+      </div>
+    </div>
+    <div class="form-control bg-opacity-50 bg-white d-flex align-content-center">
+      <label class="col-3 col-sm-2">описание</label>
+      <textarea formControlName="description" class="form-control bg-white bg-opacity-10"></textarea>
+      <div class="col-12" *ngIf="feature.get('description')?.invalid &&
+          (feature.get('description')?.dirty ||
+          feature.get('description')?.touched)">
+        <div class="bg-danger bg-opacity-25 form-control"
+             *ngIf="feature.get('description')?.errors?.maxLength">
+          Максимальное количество символов 1000
+        </div>
+
+      </div>
+    </div>
+    <input type="submit" class="btn btn-primary" value="создать" (click)="createFeature()">
+  </form>
+</div>

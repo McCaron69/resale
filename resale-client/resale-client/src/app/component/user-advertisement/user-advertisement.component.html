@@ -1,0 +1,52 @@
+<div class="container p-2 bg-dark bg-opacity-10">
+  <div class="px-4 py-2">
+    <h4>Мои объявления</h4>
+  </div>
+  <div class="container-fluid">
+    <div style="min-height: 600px" class="table-responsive">
+      <table class="table table-hover">
+        <thead>
+        <tr>
+          <th>Наименование товара</th>
+          <th>Дата подачи</th>
+          <th>Цена</th>
+          <th>Статус</th>
+          <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let advertisement of advertisements">
+          <td>{{advertisement.name}}</td>
+          <td>{{advertisement.placedAt | date: 'medium'}}</td>
+          <td>{{advertisement.price}}</td>
+          <td>{{advertisement.status | advStatus}}</td>
+          <td>
+            <button class="btn btn-warning mx-2" (click)="archiveAdvertisement(advertisement)">
+              В архив
+            </button>
+            <button class="btn btn-secondary" (click)="getAdvertisement(advertisement)">
+              Ред.
+            </button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <ul class="pagination position-relative m-0">
+      <li class="page-item" *ngIf="page>0"><a class="page-link" (click)="getUserAdvertisement(0)">1</a></li>
+      <li class="page-item" *ngIf="page>3">. . .</li>
+      <li class="page-item" *ngIf="page>2"><a class="page-link" (click)="getUserAdvertisement(page-2)">{{page - 1}}</a>
+      </li>
+      <li class="page-item" *ngIf="page>1"><a class="page-link" (click)="getUserAdvertisement(page-1)">{{page}}</a></li>
+      <li disabled="true" class="page-item"><a class="page-link">{{page + 1}}</a></li>
+      <li class="page-item" *ngIf="page<totalPages-2"><a class="page-link"
+                                                         (click)="getUserAdvertisement(page+1)">{{page + 2}}</a></li>
+      <li class="page-item" *ngIf="page<totalPages-3"><a class="page-link"
+                                                         (click)="getUserAdvertisement(page+2)">{{page + 3}}</a></li>
+      <li class="page-item" *ngIf="page<totalPages-4">. . .</li>
+      <li class="page-item" *ngIf="page<totalPages-1"><a class="page-link"
+                                                         (click)="getUserAdvertisement(totalPages-1)">{{totalPages}}</a>
+      </li>
+    </ul>
+  </div>
+</div>

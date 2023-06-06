@@ -1,0 +1,63 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<div class="navbar navbar-expand-lg bg-opacity-50 bg-dark align-content-end border-bottom border-dark border-2"
+     style="border-bottom: black 2px">
+  <div class="container-fluid">
+    <a class="navbar-brand text-info m-0 p-0" [routerLink]="'/home'">
+      <img src="assets/logo1.png" width="120" height="80" style="border-radius: 40%">
+    </a>
+    <button class="navbar-toggler me-lg-5" (click)="isMenuCollapse = !isMenuCollapse">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div [ngbCollapse]="isMenuCollapse" class="collapse navbar-collapse align-bottom" id="colMenu">
+      <ul class="navbar-nav me-auto mb-2 mb-md-0">
+        <li class="navbar-item d-flex justify-content-center">
+          <a class="navbar-link btn btn-outline-dark m-2 flex-fill" aria-current="page"
+             [routerLink]="'/home'">Главная</a>
+        </li>
+        <li class="navbar-item d-flex justify-content-center" *ngIf="authorizationService.roleMatch(['admin'])">
+          <a class="navbar-link btn btn-outline-dark m-2 flex-fill" aria-current="page" [routerLink]="'/administrate'">Администрирование</a>
+        </li>
+        <li class="navbar-item d-flex justify-content-center">
+          <a class="navbar-link btn btn-outline-dark m-2 flex-fill" aria-current="page" [routerLink]="'/about'">О
+            нас</a>
+        </li>
+      </ul>
+
+      <div class="d-flex me-4 justify-content-center">
+        <div class="form-outline">
+          <input [(ngModel)]="words" (change)="searchAdvertisement()" type="search" id="form1" class="form-control"
+                 placeholder="Поиск"/>
+        </div>
+        <button type="button" class="btn btn-primary" (click)="searchAdvertisement()">
+          <fa-icon [icon]="faSearch"></fa-icon>
+        </button>
+        <div ngbDropdown placement="bottom-end" display="dynamic" class="d-inline-block" *ngIf="authorizationService.roleMatch(['client'])">
+          <button type="button" class="btn" ngbDropdownToggle id="user-menu"><fa-icon [icon]="faUser"></fa-icon></button>
+          <div ngbDropdownMenu aria-labelledby="user-menu">
+            <button ngbDropdownItem
+                    class="btn btn-sm"
+                    [routerLink]="'/advertisement/create'">
+              Создать объявление
+            </button>
+            <button ngbDropdownItem class="btn btn-sm"
+                    [routerLink]="'/user/advertisement'">Мои объявления</button>
+            <div class="dropdown-divider"></div>
+            <button ngbDropdownItem class="btn btn-sm"
+                    [routerLink]="'/user/edit'">Редактирование пользователя</button>
+          </div>
+        </div>
+        <div class="d-flex justify-content-end">
+          <button *ngIf="!authorizationService.isSignIn()" class="btn btn-outline-dark top-0" [routerLink]="'/login'">
+            <fa-icon [icon]="faIn"></fa-icon>
+          </button>
+        </div>
+        <div class="d-flex justify-content-end">
+          <button *ngIf="authorizationService.isSignIn()" class="btn btn-outline-dark top-0" (click)="logout()">
+            <fa-icon [icon]="faOut"></fa-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

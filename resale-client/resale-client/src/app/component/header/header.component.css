@@ -1,0 +1,4 @@
+.navbar-brand:hover {
+  filter: hue-rotate(90deg);
+  filter: blur(1px);
+}
